@@ -1,0 +1,67 @@
+/*
+SPACING SYSTEM (px)
+2 / 4 / 8 / 12 / 16 / 24 / 32 / 48 / 64 / 80 / 96 / 128
+
+FONT SIZE SYSTEM (px)
+10 / 12 / 14 / 16 / 18 / 20 / 24 / 30 / 36 / 44 / 52 / 62 / 74 / 86 / 98
+*/
+
+/* 
+MAIN COLOR: #087f5b
+GREY COLOR: #343a40
+*/
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+
+header{
+    display: flex;
+    justify-content: space-between;
+   
+}
+
+.nav-container{
+    display: flex;
+    gap:4px;
+}
+
+.nav-container a:link,
+.nav-container a:visited{
+    text-decoration: none;
+    color: #2b8a3e;
+}
+
+.success{
+    background-color:#b2f2bb;
+    color: #2b8a3e;
+    padding: 20px;
+}
+
+.warning,
+.debug,
+.error{
+    background-color:#ffc9c9 ;
+    color: #c92a2a;
+    padding: 20px;
+}
+
+.info{
+    background-color: #ffec99;
+    color:#d9480f ;
+    padding: 20px;
+}
+
+.account-img{
+    border-radius: 100px;
+    width: 100px;
+    height: auto;
+}
+
+.media{
+    width: 50vw;
+    display: flex;
+    gap: 16px;
+}
