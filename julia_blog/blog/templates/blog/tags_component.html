@@ -1,0 +1,19 @@
+{% load taggit_templatetags2_tags %}
+
+<div class="tags-container">
+  <div class="tags--header">
+    <h3>Browse Topics</h3>
+  </div>
+  <div class="tags">
+    {% get_taglist as tags %}
+    <ul class="tags__list">
+      {% for tag in tags %}
+      <li>
+        <a href="{% url 'tagged-home' tag.slug%}"
+          >{{tag}} <span>{{tag.num_times}}</span></a
+        >
+      </li>
+      {% endfor %}
+    </ul>
+  </div>
+</div>

@@ -1,12 +1,78 @@
-{% extends 'base.html' %} {% block content %}
-<h2>{{object.title}}</h2>
-<img src="{{post.author.profile.image.url}}" />
-<p>By <a href="{% url 'user-posts' object.author.username %}">{{object.author}}</a></p>
-<p>{{object.date_posted|date:"Y-F-d"}}</p>
-{% if object.author == user %}
-    <a href="{% url 'post-update' object.id %}">Update</a>
-    <a href="{% url 'post-delete' object.id %}">Delete</a>
-{% endif %}
-<p>{{object.content}}</p>
-<hr />
-{% endblock content %}
+{% extends 'base.html' %}
+{% load post_extras %}
+{% block content %}
+    {% if messages %} {% for message in messages %}
+    <div class="{{message.tags}}">{{ message }}</div>
+    {% endfor %} {% endif %}
+
+    <div class="post-header">
+      <h2 class="post-title">{{object.title}}</h2>
+    </div>
+    <div class="author-detail">
+      <a href="{% url 'user-posts' post.author.username %}" class="roomListRoom__author">
+        <div class="avatar avatar--small">
+            <img src="{{post.author.profile.image.url}}" />
+        </div>
+        <span>@{{post.author.username}}</span>
+    </a>
+      <!-- <img class="rounded-circle account-img" src="{{post.author.profile.image.url}}" />
+      <div class="author-info">
+        <p>
+          @<a href="{% url 'user-posts' object.author.username %}">
+            {{object.author}}
+          </a>
+        </p>
+        <p>{{object.date_posted|timesince|split_timesince:"," }}前</p> -->
+      </div> 
+    </div>
+    <div class="post-content">
+      <figure>
+        <img src="{{post.headerImage.url}}" alt="header image" >
+      </figure>
+      <div class="tags-buttons">
+        <ul class="card-tags">
+          {% for tag in object.tags.all %}
+          <li>
+            <a href="{% url 'tagged-home' tag.slug%}">{{tag}}</a>
+          </li>
+          {% endfor %}
+        </ul>
+        <div class="update-delete-button">
+          {% if object.author == user %}
+          <a class="btn btn-primary" href="{% url 'post-update' object.id %}">Update</a>
+          <a class="btn btn-danger" href="{% url 'post-delete' object.id %}">Delete</a>
+          {% endif %}
+        </div>
+      </div>
+      <p class="post-content">{{object.display_my_safefield|safe}}</p>
+      <div class="post-content-footer">
+        <form action="{% url 'like_post' post.pk %}" method="POST">
+          {% csrf_token %}
+        
+        {% if user.is_authenticated %}
+          {% if is_liked %}
+            <button type="submit", name="post_id", url="{% url 'like_post' post.id %}" value="{{ post.id }}" ,id="liked--{{object.id}}" class="like-button">
+              <svg xmlns="http://www.w3.org/2000/svg" class="icon liked--icon" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+              </svg>
+            </button>
+          {% else %}	
+            <button type="submit", name="post_id", value="{{ post.id }}" id="{{object.id}}" class="like-button">
+              <svg xmlns="http://www.w3.org/2000/svg" class="icon like--icon" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+              </svg>
+            </button> 
+      
+          {% endif %}
+          {{ total_likes }}
+        {% else %}
+          <small><a href="{% url 'login' %}">Login</a> to like</small>
+        {% endif %}
+        </form>
+        <span>{{object.date_posted|timesince|split_timesince:"," }}前</span>
+      </div>
+    </div>
+
+    {% include 'blog/comment_container.html' %}
+
+    {% endblock %}

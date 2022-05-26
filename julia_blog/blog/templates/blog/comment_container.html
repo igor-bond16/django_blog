@@ -1,0 +1,50 @@
+{% load static %}
+
+<div class="conversation--room">
+  <div class="comment-wrapper">
+    <h3>Conversation</h3>
+    <hr />
+    <div class="post--comments">
+      {% for message in object.message_set.all %}
+      <div class="comment">
+        <div class="avatar avatar--small">
+          <img
+            src="{{message.user.profile.image.url}}"
+            alt="user profile image"
+          />
+        </div>
+        <div class="comment-body">
+          <span class="comment-author">{{message.user.username}}</span>
+          <span>{{message}}</span>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+
+  {% if request.user.is_authenticated %}
+  <div>
+    <form method="POST" action="" id="form_area">
+      {% csrf_token %}
+      <input
+        class="form-control mr-sm-2 comment-text"
+        type="text"
+        name="body"
+        placeholder="Write Your message here..."
+      />
+      <button
+        class="btn btn-outline-success my-2 my-sm-0 save-comment"
+        type="submit"
+        data-post="{{object.id}}"
+        data-url="{% url 'post-detail' object.id %}"
+      >
+        Comment
+      </button>
+    </form>
+  </div>
+  {% else %}
+  <div class="comment-login-required">
+    <p><a href="{% url 'login' %}">Login</a> to comment</p>
+  </div>
+  {% endif %}
+</div>
